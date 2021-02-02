@@ -57,38 +57,50 @@ public final class Lexer {
      * by {@link #lex()}
      */
     public Token lexToken() {
+        int count = 0;
         if(peek(IdendifyReg)) {
+            while(match(IdendifyReg)) {
+                count ++;
+            }
             return lexIdentifier();
         }
         if(peek(NumberReg)) {
+            while(match(NumberReg)) {
+                count ++;
+            }
             return lexNumber();
         }
         if(peek(StringReg)) {
+            while(match(StringReg)) {
+                count ++;
+            }
             return lexString();
         }
         if(peek(CharReg)) {
+            while(match(CharReg)) {
+                count ++;
+            }
             return lexCharacter();
+        }
+        while(match(OperatorReg)) {
+            count++;
         }
         return lexOperator();
     }
 
     public Token lexIdentifier() {
-        match(IdendifyReg);
         return chars.emit(Token.Type.IDENTIFIER);
     }
 
     public Token lexNumber() {
-        match(NumberReg);
         return chars.emit(Token.Type.INTEGER);
     }
 
     public Token lexCharacter() {
-        match(CharReg);
         return chars.emit(Token.Type.CHARACTER);
     }
 
     public Token lexString() {
-        match(StringReg);
         return chars.emit(Token.Type.STRING);
     }
 
@@ -97,7 +109,6 @@ public final class Lexer {
     }
 
     public Token lexOperator() {
-        match(OperatorReg);
         return chars.emit(Token.Type.OPERATOR);
     }
 
