@@ -1,0 +1,13 @@
+plc/homework/Regex.java
+ plc.homework.Regex
+plc/homework/Token.java
+ plc.homework.Token
+ plc.homework.Token$Type
+plc/homework/ParseException.java
+ plc.homework.ParseException
+plc/homework/main.java
+ plc.homework.main
+plc/homework/Lexer.java
+ plc.homework.Lexer
+ plc.homework.Lexer$CharStream
+ plc.homework.test

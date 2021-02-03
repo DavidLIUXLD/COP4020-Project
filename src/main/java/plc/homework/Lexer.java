@@ -1,5 +1,6 @@
 package plc.homework;
 
+import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,12 +21,17 @@ import java.util.List;
 public final class Lexer {
 
     private final CharStream chars;
-    private final String IdendifyReg = "[A-Za-z_] [A-Za-z0-9_-]*";
-    private final String NumberReg = "[+\\-]? [0-9]+ ('.' [0-9]+)?";
-    private final String StringReg = "([^\"\\n\\r\\\\] | escape)*";
-    private final String CharReg = "['] ([^'\\n\\r\\\\] | escape) [']";
-    private final String OperatorReg = "[<>!=] '='? | 'any character'";
-    private final String EscapeReg = "'\\'[bnrt'\"\\]";
+    private final String IdendifySReg = "[A-Za-z_]";
+    private final String IdendifyPReg = "[A-Za-z0-9_-]*";
+    private final String SignReg = "[+\\-]";
+    private final String DigitReg = "[0-9]+";
+    private final String decimalReg = ".";
+    private final String StringSEReg = "\"";
+    private final String StringCReg = "([^\"\\n\\r\\\\])";
+    private final String CharSEReg = "[']";
+    private final String OperatorSReg = "[<>!=]|[^\"\\n\\r\\\\]|(\\[bnrt'\"\\])";
+    private final String OperatorEReg = "=";
+    private final String EscapeReg = "\\[bnrt'\"\\]";
     public Lexer(String input) {
         chars = new CharStream(input);
     }
@@ -57,50 +63,74 @@ public final class Lexer {
      * by {@link #lex()}
      */
     public Token lexToken() {
-        int count = 0;
-        if(peek(IdendifyReg)) {
-            while(match(IdendifyReg)) {
-                count ++;
-            }
+        if(peek(IdendifySReg)) {
             return lexIdentifier();
         }
-        if(peek(NumberReg)) {
-            while(match(NumberReg)) {
-                count ++;
-            }
+
+        if(peek(SignReg) || peek(DigitReg)) {
             return lexNumber();
         }
-        if(peek(StringReg)) {
-            while(match(StringReg)) {
-                count ++;
-            }
-            return lexString();
-        }
-        if(peek(CharReg)) {
-            while(match(CharReg)) {
-                count ++;
-            }
+
+        if(peek(CharSEReg)) {
             return lexCharacter();
         }
-        while(match(OperatorReg)) {
-            count++;
+
+        if(peek(StringSEReg)) {
+            return lexString();
         }
-        return lexOperator();
+
+        if(peek(OperatorSReg)) {
+            return lexOperator();
+        }else {
+            throw new ParseException("not valid entry", chars.index);
+        }
+
     }
 
     public Token lexIdentifier() {
+        chars.advance();
+        while (match(IdendifyPReg)) {
+        }
         return chars.emit(Token.Type.IDENTIFIER);
     }
 
     public Token lexNumber() {
+        chars.advance();
+        while(match(DigitReg)) {
+        }
+        if(match(decimalReg)) {
+            if(!match(DigitReg)){
+                throw new ParseException("unclosed decimal", chars.index);
+            }
+            while(match(DigitReg)) {
+            }
+            return chars.emit(Token.Type.DECIMAL);
+        }
         return chars.emit(Token.Type.INTEGER);
     }
 
     public Token lexCharacter() {
+        chars.advance();
+        if(!match(StringCReg)) {
+            if(!match(CharSEReg)){
+                throw new ParseException("not a valid character", chars.index);
+            }else{
+                return chars.emit(Token.Type.CHARACTER);
+            }
+        }
+        if(!match(CharSEReg)){
+            throw new ParseException("not a valid character", chars.index);
+        }
         return chars.emit(Token.Type.CHARACTER);
     }
 
     public Token lexString() {
+        chars.advance();
+        while(!match(StringSEReg)) {
+            if(!match(StringCReg)) {
+                throw new ParseException("not a valid string", chars.index);
+            }
+        }
         return chars.emit(Token.Type.STRING);
     }
 
@@ -109,6 +139,8 @@ public final class Lexer {
     }
 
     public Token lexOperator() {
+        chars.advance();
+        match(OperatorEReg);
         return chars.emit(Token.Type.OPERATOR);
     }
 
@@ -119,7 +151,7 @@ public final class Lexer {
      */
     public boolean peek(String... patterns) {
         for(int i = 0; i < patterns.length; i ++){
-            if(!chars.has(i) || String.valueOf(chars.get(i)).matches(patterns[i])) {
+            if(!chars.has(i) || !String.valueOf(chars.get(i)).matches(patterns[i])) {
                 return false;
             }
         }
@@ -184,4 +216,11 @@ public final class Lexer {
 
     }
 
+}
+class test {
+    public static void test() {
+        Lexer lexer = new Lexer("-five");
+        System.out.println(lexer.peek("[A-Za-z_][A-Za-z0-9_-]*"));
+
+    }
 }
