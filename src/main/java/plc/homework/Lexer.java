@@ -29,9 +29,11 @@ public final class Lexer {
     private final String StringSEReg = "\"";
     private final String StringCReg = "([^\"\\n\\r\\\\])";
     private final String CharSEReg = "[']";
-    private final String OperatorSReg = "[<>!=]|[^\"\\n\\r\\\\]|(\\[bnrt'\"\\])";
+    private final String OperatorSReg = "[<>!=]|[^\"\\n\\r\\\\]";
     private final String OperatorEReg = "=";
-    private final String EscapeReg = "\\[bnrt'\"\\]";
+    private final String EscapeSReg = "\\\\";
+    private final String EscapeEReg = "[bnrt'\"\\\\]";
+    private final String WhiteSpace = "[ \\\\b\\\\n\\\\r\\\\t]";
     public Lexer(String input) {
         chars = new CharStream(input);
     }
@@ -43,7 +45,7 @@ public final class Lexer {
     public List<Token> lex() {
         List<Token> tokenList = new LinkedList<Token>();
         while(chars.has(0)) {
-            if(chars.get(0) == ' '){
+            if(peek(WhiteSpace)){
                 chars.advance();
                 chars.skip();
             }else{
@@ -63,6 +65,9 @@ public final class Lexer {
      * by {@link #lex()}
      */
     public Token lexToken() {
+        if(peek(EscapeSReg,EscapeEReg)) {
+            lexEscape();
+        }
         if(peek(IdendifySReg)) {
             return lexIdentifier();
         }
@@ -111,11 +116,11 @@ public final class Lexer {
 
     public Token lexCharacter() {
         chars.advance();
-        if(!match(StringCReg)) {
-            if(!match(CharSEReg)){
-                throw new ParseException("not a valid character", chars.index);
-            }else{
-                return chars.emit(Token.Type.CHARACTER);
+        if(!match(StringSEReg)) {
+            if(!match(StringCReg)) {
+                if (!match(EscapeSReg, EscapeEReg)) {
+                    throw new ParseException("not a valid character", chars.index);
+                }
             }
         }
         if(!match(CharSEReg)){
@@ -127,15 +132,18 @@ public final class Lexer {
     public Token lexString() {
         chars.advance();
         while(!match(StringSEReg)) {
-            if(!match(StringCReg)) {
+            if(!match(StringCReg) && !match(EscapeSReg, EscapeEReg)) {
                 throw new ParseException("not a valid string", chars.index);
             }
         }
+
         return chars.emit(Token.Type.STRING);
     }
 
     public void lexEscape() {
-        throw new UnsupportedOperationException(); //TODO
+        chars.advance();
+        chars.advance();
+        chars.skip();
     }
 
     public Token lexOperator() {
