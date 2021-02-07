@@ -29,11 +29,12 @@ public final class Lexer {
     private final String StringSEReg = "\"";
     private final String StringCReg = "([^\"\\n\\r\\\\])";
     private final String CharSEReg = "[']";
-    private final String OperatorSReg = "[<>!=]|[^\"\\n\\r\\\\]";
+    private final String OperatorSReg = "[<>!=]";
     private final String OperatorEReg = "=";
     private final String EscapeSReg = "\\\\";
     private final String EscapeEReg = "[bnrt'\"\\\\]";
-    private final String WhiteSpace = "[ \\\\b\\\\n\\\\r\\\\t]";
+    private final String Whitespace = "[ \b\n\r\t]";
+
     public Lexer(String input) {
         chars = new CharStream(input);
     }
@@ -45,10 +46,10 @@ public final class Lexer {
     public List<Token> lex() {
         List<Token> tokenList = new LinkedList<Token>();
         while(chars.has(0)) {
-            if(peek(WhiteSpace)){
-                chars.advance();
-                chars.skip();
-            }else{
+            while(match(Whitespace)) {
+                    lexEscape();
+            }
+            if(chars.has(0)) {
                 Token token = lexToken();
                 tokenList.add(token);
             }
@@ -65,9 +66,6 @@ public final class Lexer {
      * by {@link #lex()}
      */
     public Token lexToken() {
-        if(peek(EscapeSReg,EscapeEReg)) {
-            lexEscape();
-        }
         if(peek(IdendifySReg)) {
             return lexIdentifier();
         }
@@ -83,12 +81,7 @@ public final class Lexer {
         if(peek(StringSEReg)) {
             return lexString();
         }
-
-        if(peek(OperatorSReg)) {
-            return lexOperator();
-        }else {
-            throw new ParseException("not valid entry", chars.index);
-        }
+        return lexOperator();
 
     }
 
@@ -100,10 +93,15 @@ public final class Lexer {
     }
 
     public Token lexNumber() {
+        if(chars.get(0) == '0') {
+            chars.advance();
+            return chars.emit(Token.Type.INTEGER);
+        }
         chars.advance();
         while(match(DigitReg)) {
         }
-        if(match(decimalReg)) {
+        if(chars.has(0) && chars.get(0) == '.') {
+            chars.advance();
             if(!match(DigitReg)){
                 throw new ParseException("unclosed decimal", chars.index);
             }
@@ -141,14 +139,15 @@ public final class Lexer {
     }
 
     public void lexEscape() {
-        chars.advance();
-        chars.advance();
         chars.skip();
     }
 
     public Token lexOperator() {
-        chars.advance();
-        match(OperatorEReg);
+        if(match(OperatorSReg)) {
+            match(OperatorEReg);
+        }else{
+            chars.advance();
+        }
         return chars.emit(Token.Type.OPERATOR);
     }
 
@@ -225,10 +224,4 @@ public final class Lexer {
     }
 
 }
-class test {
-    public static void test() {
-        Lexer lexer = new Lexer("-five");
-        System.out.println(lexer.peek("[A-Za-z_][A-Za-z0-9_-]*"));
 
-    }
-}

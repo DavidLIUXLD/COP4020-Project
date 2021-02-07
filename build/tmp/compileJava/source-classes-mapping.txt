@@ -10,4 +10,3 @@ plc/homework/main.java
 plc/homework/Lexer.java
  plc.homework.Lexer
  plc.homework.Lexer$CharStream
- plc.homework.test

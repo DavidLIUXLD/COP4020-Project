@@ -23,7 +23,7 @@
 <tr>
 <td>
 <div class="infoBox" id="tests">
-<div class="counter">1</div>
+<div class="counter">30</div>
 <p>tests</p>
 </div>
 </td>
@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.049s</div>
+<div class="counter">0.119s</div>
 <p>duration</p>
 </div>
 </td>
@@ -70,13 +70,189 @@
 <thead>
 <tr>
 <th>Test</th>
+<th>Method name</th>
 <th>Duration</th>
 <th>Result</th>
 </tr>
 </thead>
 <tr>
+<td class="success">[1] Alphabetic, 'c', true</td>
+<td class="success">testCharacter(String, String, boolean)[1]</td>
+<td class="success">0.036s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[2] Newline Escape, '\n', true</td>
+<td class="success">testCharacter(String, String, boolean)[2]</td>
+<td class="success">0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[3] Empty, '', false</td>
+<td class="success">testCharacter(String, String, boolean)[3]</td>
+<td class="success">0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[4] Multiple, 'abc', false</td>
+<td class="success">testCharacter(String, String, boolean)[4]</td>
+<td class="success">0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[1] Integer, 1, false</td>
+<td class="success">testDecimal(String, String, boolean)[1]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[2] Multiple Digits, 123.456, true</td>
+<td class="success">testDecimal(String, String, boolean)[2]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[3] Negative Decimal, -1.0, true</td>
+<td class="success">testDecimal(String, String, boolean)[3]</td>
+<td class="success">0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[4] Trailing Decimal, 1., false</td>
+<td class="success">testDecimal(String, String, boolean)[4]</td>
+<td class="success">0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[5] Leading Decimal, .5, false</td>
+<td class="success">testDecimal(String, String, boolean)[5]</td>
+<td class="success">0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[1] Example 1, LET x = 5;, [IDENTIFIER=LET@0, IDENTIFIER=x@4, OPERATOR==@6, INTEGER=5@8, OPERATOR=;@9]</td>
+<td class="success">testExamples(String, String, List)[1]</td>
+<td class="success">0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[2] Example 2, print(&quot;Hello, World!&quot;);, [IDENTIFIER=print@0, OPERATOR=(@5, STRING=&quot;Hello, World!&quot;@6, OPERATOR=)@21, OPERATOR=;@22]</td>
+<td class="success">testExamples(String, String, List)[2]</td>
+<td class="success">0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
 <td class="success">testException()</td>
-<td class="success">0.049s</td>
+<td class="success">testException()</td>
+<td class="success">0.044s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[1] Alphabetic, getName, true</td>
+<td class="success">testIdentifier(String, String, boolean)[1]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[2] Alphanumeric, thelegend27, true</td>
+<td class="success">testIdentifier(String, String, boolean)[2]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[3] Leading Hyphen, -five, false</td>
+<td class="success">testIdentifier(String, String, boolean)[3]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[4] Leading Digit, 1fish2fish3fishbluefish, false</td>
+<td class="success">testIdentifier(String, String, boolean)[4]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[1] Single Digit, 1, true</td>
+<td class="success">testInteger(String, String, boolean)[1]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[2] Decimal, 123.456, false</td>
+<td class="success">testInteger(String, String, boolean)[2]</td>
+<td class="success">0s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[3] Signed Decimal, -1.0, false</td>
+<td class="success">testInteger(String, String, boolean)[3]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[4] Trailing Decimal, 1., false</td>
+<td class="success">testInteger(String, String, boolean)[4]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[5] Leading Decimal, .5, false</td>
+<td class="success">testInteger(String, String, boolean)[5]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[1] Character, (, true</td>
+<td class="success">testOperator(String, String, boolean)[1]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[2] Comparison, &lt;=, true</td>
+<td class="success">testOperator(String, String, boolean)[2]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[3] Space,  , false</td>
+<td class="success">testOperator(String, String, boolean)[3]</td>
+<td class="success">0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[4] Tab, 	, false</td>
+<td class="success">testOperator(String, String, boolean)[4]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[1] Empty, &quot;&quot;, true</td>
+<td class="success">testString(String, String, boolean)[1]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[2] Alphabetic, &quot;abc&quot;, true</td>
+<td class="success">testString(String, String, boolean)[2]</td>
+<td class="success">0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[3] Newline Escape, &quot;Hello,\nWorld&quot;, true</td>
+<td class="success">testString(String, String, boolean)[3]</td>
+<td class="success">0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[4] Unterminated, &quot;unterminated, false</td>
+<td class="success">testString(String, String, boolean)[4]</td>
+<td class="success">0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[5] Invalid Escape, &quot;invalid\escape&quot;, false</td>
+<td class="success">testString(String, String, boolean)[5]</td>
+<td class="success">0.001s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -89,7 +265,7 @@
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 6.7</a> at Feb 3, 2021 5:19:22 PM</p>
+<a href="http://www.gradle.org">Gradle 6.7</a> at Feb 6, 2021 7:57:03 PM</p>
 </div>
 </div>
 </body>
