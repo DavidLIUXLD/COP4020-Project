@@ -275,10 +275,10 @@ public final class Parser {
                         }
                         tokens.advance();
                     }
-                    return new Ast.Expr.Function(null, name, arguments);
+                    return new Ast.Expr.Function(Optional.empty(), name, arguments);
                 }else {
                     tokens.advance();
-                    return new Ast.Expr.Access(null, name);
+                    return new Ast.Expr.Access(Optional.empty(), name);
                 }
             }
             if(match("(")) {
