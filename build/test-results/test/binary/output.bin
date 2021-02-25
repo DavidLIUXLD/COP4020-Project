@@ -1,0 +1,2 @@
+Ast.Expr.Literal{literal=1}
+7Ast.Expr.Access{receiver=Optional.empty, name='expr'}

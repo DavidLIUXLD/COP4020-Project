@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - ParserTests</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>ParserTests</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/plc.project.html">plc.project</a> &gt; ParserTests</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">30</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">0.209s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="tabs">
+<ul class="tabLinks">
+<li>
+<a href="#tab0">Tests</a>
+</li>
+<li>
+<a href="#tab1">Standard output</a>
+</li>
+</ul>
+<div id="tab0" class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Method name</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">[1] Variable, [IDENTIFIER=name@0], Ast.Expr.Access{receiver=Optional.empty, name='name'}</td>
+<td class="success">testAccessExpression(String, List, Access)[1]</td>
+<td class="success">0.003s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[2] Field Access, [IDENTIFIER=obj@0, OPERATOR=.@3, IDENTIFIER=field@4], Ast.Expr.Access{receiver=Optional[Ast.Expr.Access{receiver=Optional.empty, name='obj'}], name='field'}</td>
+<td class="success">testAccessExpression(String, List, Access)[2]</td>
+<td class="success">0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[1] Assignment, [IDENTIFIER=name@0, OPERATOR==@5, IDENTIFIER=value@7, OPERATOR=;@12], Ast.Stmt.Assignment{receiver=Ast.Expr.Access{receiver=Optional.empty, name='name'}, value=Ast.Expr.Access{receiver=Optional.empty, name='value'}}</td>
+<td class="success">testAssignmentStatement(String, List, Assignment)[1]</td>
+<td class="success">0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[1] Binary And, [IDENTIFIER=expr1@0, IDENTIFIER=AND@6, IDENTIFIER=expr2@10], Ast.Expr.Binary{operator='AND', left=Ast.Expr.Access{receiver=Optional.empty, name='expr1'}, right=Ast.Expr.Access{receiver=Optional.empty, name='expr2'}}</td>
+<td class="success">testBinaryExpression(String, List, Binary)[1]</td>
+<td class="success">0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[2] Binary Equality, [IDENTIFIER=expr1@0, OPERATOR===@6, IDENTIFIER=expr2@9], Ast.Expr.Binary{operator='==', left=Ast.Expr.Access{receiver=Optional.empty, name='expr1'}, right=Ast.Expr.Access{receiver=Optional.empty, name='expr2'}}</td>
+<td class="success">testBinaryExpression(String, List, Binary)[2]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[3] Binary Addition, [IDENTIFIER=expr1@0, OPERATOR=+@6, IDENTIFIER=expr2@8], Ast.Expr.Binary{operator='+', left=Ast.Expr.Access{receiver=Optional.empty, name='expr1'}, right=Ast.Expr.Access{receiver=Optional.empty, name='expr2'}}</td>
+<td class="success">testBinaryExpression(String, List, Binary)[3]</td>
+<td class="success">0.003s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[4] Binary Multiplication, [IDENTIFIER=expr1@0, OPERATOR=*@6, IDENTIFIER=expr2@8], Ast.Expr.Binary{operator='*', left=Ast.Expr.Access{receiver=Optional.empty, name='expr1'}, right=Ast.Expr.Access{receiver=Optional.empty, name='expr2'}}</td>
+<td class="success">testBinaryExpression(String, List, Binary)[4]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[1] Definition, [IDENTIFIER=LET@-1, IDENTIFIER=name@-1, OPERATOR=;@-1], Ast.Stmt.Declaration{name='name', value=Optional.empty}</td>
+<td class="success">testDeclarationStatement(String, List, Declaration)[1]</td>
+<td class="success">0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[2] Initialization, [IDENTIFIER=LET@0, IDENTIFIER=name@4, OPERATOR==@9, IDENTIFIER=expr@11, OPERATOR=;@15], Ast.Stmt.Declaration{name='name', value=Optional[Ast.Expr.Access{receiver=Optional.empty, name='expr'}]}</td>
+<td class="success">testDeclarationStatement(String, List, Declaration)[2]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testExample1()</td>
+<td class="success">testExample1()</td>
+<td class="success">0.089s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[1] Function Expression, [IDENTIFIER=name@0, OPERATOR=(@4, OPERATOR=)@5, OPERATOR=;@6], Ast.Stmt.Expression{expression=Ast.Expr.Function{receiver=Optional.empty, name='name', arguments=[]}}</td>
+<td class="success">testExpressionStatement(String, List, Expression)[1]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[1] For, [IDENTIFIER=FOR@0, IDENTIFIER=elem@6, IDENTIFIER=IN@9, IDENTIFIER=list@12, IDENTIFIER=DO@17, IDENTIFIER=stmt@20, OPERATOR=;@24, IDENTIFIER=END@26], For{name='elem', value=Ast.Expr.Access{receiver=Optional.empty, name='list'}, statements=[Ast.Stmt.Expression{expression=Ast.Expr.Access{receiver=Optional.empty, name='stmt'}}]}</td>
+<td class="success">testForStatement(String, List, For)[1]</td>
+<td class="success">0.069s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[1] Zero Arguments, [IDENTIFIER=name@0, OPERATOR=(@4, OPERATOR=)@5], Ast.Expr.Function{receiver=Optional.empty, name='name', arguments=[]}</td>
+<td class="success">testFunctionExpression(String, List, Function)[1]</td>
+<td class="success">0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[2] Multiple Arguments, [IDENTIFIER=name@0, OPERATOR=(@4, IDENTIFIER=expr1@5, OPERATOR=,@10, IDENTIFIER=expr2@12, OPERATOR=,@17, IDENTIFIER=expr3@19, OPERATOR=)@24], Ast.Expr.Function{receiver=Optional.empty, name='name', arguments=[Ast.Expr.Access{receiver=Optional.empty, name='expr1'}, Ast.Expr.Access{receiver=Optional.empty, name='expr2'}, Ast.Expr.Access{receiver=Optional.empty, name='expr3'}]}</td>
+<td class="success">testFunctionExpression(String, List, Function)[2]</td>
+<td class="success">0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[3] Method Call, [IDENTIFIER=obj@0, OPERATOR=.@3, IDENTIFIER=method@4, OPERATOR=(@10, OPERATOR=)@11], Ast.Expr.Function{receiver=Optional[Ast.Expr.Access{receiver=Optional.empty, name='obj'}], name='method', arguments=[]}</td>
+<td class="success">testFunctionExpression(String, List, Function)[3]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[1] Grouped Variable, [OPERATOR=(@0, IDENTIFIER=expr@1, OPERATOR=)@5], Ast.Expr.Group{expression=Ast.Expr.Access{receiver=Optional.empty, name='expr'}}</td>
+<td class="success">testGroupExpression(String, List, Group)[1]</td>
+<td class="success">0.003s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[2] Grouped Binary, [OPERATOR=(@0, IDENTIFIER=expr1@1, OPERATOR=+@7, IDENTIFIER=expr2@9, OPERATOR=)@14], Ast.Expr.Group{expression=Ast.Expr.Binary{operator='+', left=Ast.Expr.Access{receiver=Optional.empty, name='expr1'}, right=Ast.Expr.Access{receiver=Optional.empty, name='expr2'}}}</td>
+<td class="success">testGroupExpression(String, List, Group)[2]</td>
+<td class="success">0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[1] If, [IDENTIFIER=IF@0, IDENTIFIER=expr@3, IDENTIFIER=DO@8, IDENTIFIER=stmt@11, OPERATOR=;@15, IDENTIFIER=END@17], Ast.Stmt.If{condition=Ast.Expr.Access{receiver=Optional.empty, name='expr'}, thenStatements=[Ast.Stmt.Expression{expression=Ast.Expr.Access{receiver=Optional.empty, name='stmt'}}], elseStatements=[]}</td>
+<td class="success">testIfStatement(String, List, If)[1]</td>
+<td class="success">0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[2] Else, [IDENTIFIER=IF@0, IDENTIFIER=expr@3, IDENTIFIER=DO@8, IDENTIFIER=stmt1@11, OPERATOR=;@16, IDENTIFIER=ELSE@18, IDENTIFIER=stmt2@23, OPERATOR=;@28, IDENTIFIER=END@30], Ast.Stmt.If{condition=Ast.Expr.Access{receiver=Optional.empty, name='expr'}, thenStatements=[Ast.Stmt.Expression{expression=Ast.Expr.Access{receiver=Optional.empty, name='stmt1'}}], elseStatements=[Ast.Stmt.Expression{expression=Ast.Expr.Access{receiver=Optional.empty, name='stmt2'}}]}</td>
+<td class="success">testIfStatement(String, List, If)[2]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[1] Boolean Literal, [IDENTIFIER=TRUE@0], Ast.Expr.Literal{literal=true}</td>
+<td class="success">testLiteralExpression(String, List, Literal)[1]</td>
+<td class="success">0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[2] Integer Literal, [INTEGER=1@0], Ast.Expr.Literal{literal=1}</td>
+<td class="success">testLiteralExpression(String, List, Literal)[2]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[3] Decimal Literal, [DECIMAL=2.0@0], Ast.Expr.Literal{literal=2.0}</td>
+<td class="success">testLiteralExpression(String, List, Literal)[3]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[4] Character Literal, [CHARACTER='c'@0], Ast.Expr.Literal{literal=c}</td>
+<td class="success">testLiteralExpression(String, List, Literal)[4]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[5] String Literal, [STRING=&quot;string&quot;@0], Ast.Expr.Literal{literal=string}</td>
+<td class="success">testLiteralExpression(String, List, Literal)[5]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[6] Escape Character, [STRING=&quot;Hello,\nWorld!&quot;@0], Ast.Expr.Literal{literal=Hello,
+World!}</td>
+<td class="success">testLiteralExpression(String, List, Literal)[6]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[1] Return Statement, [IDENTIFIER=RETURN@0, IDENTIFIER=expr@7, OPERATOR=;@11], Ast.Stmt.Return{value=Ast.Expr.Access{receiver=Optional.empty, name='expr'}}</td>
+<td class="success">testReturnStatement(String, List, Return)[1]</td>
+<td class="success">0.005s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[1] Zero Statements, [], Ast.Source{fields=[]functions=[]}</td>
+<td class="success">testSource(String, List, Source)[1]</td>
+<td class="success">0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[2] Field, [IDENTIFIER=LET@0, IDENTIFIER=name@4, OPERATOR==@9, IDENTIFIER=expr@11, OPERATOR=;@15], Ast.Source{fields=[Ast.Field{name='name', value=Optional[Ast.Expr.Access{receiver=Optional.empty, name='expr'}]}]functions=[]}</td>
+<td class="success">testSource(String, List, Source)[2]</td>
+<td class="success">0.003s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[3] Method, [IDENTIFIER=DEF@0, IDENTIFIER=name@4, OPERATOR=(@8, OPERATOR=)@9, IDENTIFIER=DO@11, IDENTIFIER=stmt@14, OPERATOR=;@18, IDENTIFIER=END@20], Ast.Source{fields=[]functions=[Ast.Function{name='name', parameters=[], statements=[Ast.Stmt.Expression{expression=Ast.Expr.Access{receiver=Optional.empty, name='stmt'}}]}]}</td>
+<td class="success">testSource(String, List, Source)[3]</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[1] While, [IDENTIFIER=WHILE@0, IDENTIFIER=expr@6, IDENTIFIER=DO@11, IDENTIFIER=stmt@14, OPERATOR=;@18, IDENTIFIER=END@20], Ast.Stmt.While{condition=Ast.Expr.Access{receiver=Optional.empty, name='expr'}, statements=[Ast.Stmt.Expression{expression=Ast.Expr.Access{receiver=Optional.empty, name='stmt'}}]}</td>
+<td class="success">testWhileStatement(String, List, While)[1]</td>
+<td class="success">0.002s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div id="tab1" class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>Ast.Expr.Literal{literal=1}
+Ast.Expr.Access{receiver=Optional.empty, name='expr'}
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="http://www.gradle.org">Gradle 6.7</a> at Feb 24, 2021 11:45:01 PM</p>
+</div>
+</div>
+</body>
+</html>

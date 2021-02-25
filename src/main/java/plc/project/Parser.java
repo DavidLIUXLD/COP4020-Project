@@ -2,8 +2,12 @@ package plc.project;
 
 import plc.homework.Token;
 import plc.homework.ParseException;
+import sun.awt.image.ImageWatched;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -33,7 +37,15 @@ public final class Parser {
      * Parses the {@code source} rule.
      */
     public Ast.Source parseSource() throws ParseException {
-        throw new UnsupportedOperationException(); //TODO
+        List<Ast.Field> fields = new ArrayList<>();
+        List<Ast.Method> methods = new ArrayList<>();
+        while(match("LET")) {
+            fields.add(parseField());
+        }
+        while(match("DEF")) {
+            methods.add(parseMethod());
+        }
+        return new Ast.Source(fields, methods);
     }
 
     /**
@@ -41,7 +53,26 @@ public final class Parser {
      * next tokens start a field, aka {@code LET}.
      */
     public Ast.Field parseField() throws ParseException {
-        throw new UnsupportedOperationException(); //TODO
+        if (!tokens.has(0)) {
+            throw new ParseException("parsing out of bound", tokens.index);
+        }
+        if (!peek(Token.Type.IDENTIFIER)) {
+            throw new ParseException("Field not started by Identifier", tokens.index);
+        }
+        String name = tokens.get(0).getLiteral();
+        tokens.advance();
+        if (!match("=")) {
+            if(!match(";")) {
+                throw new ParseException("statement not ended with ; ->" + tokens.get(0).getLiteral(), tokens.index);
+            }
+            return new Ast.Field(name, Optional.empty());
+        }
+        Ast.Expr value = parseExpression();
+        System.out.println(value.toString());
+        if (!match(";")) {
+            throw new ParseException("statement not ended with ; ->" + tokens.get(0).getLiteral(), tokens.index);
+        }
+        return new Ast.Field(name, Optional.of(value));
     }
 
     /**
@@ -49,7 +80,50 @@ public final class Parser {
      * next tokens start a method, aka {@code DEF}.
      */
     public Ast.Method parseMethod() throws ParseException {
-        throw new UnsupportedOperationException(); //TODO
+        if(!tokens.has(0)) {
+            throw new ParseException("parsing out of bound", tokens.index);
+        }
+        if(!peek(Token.Type.IDENTIFIER)) {
+            throw new ParseException("Method not given identifier", tokens.index);
+        }
+        String name = tokens.get(0).getLiteral();
+        tokens.advance();
+        if(!match("(")) {
+            throw new ParseException("parameter scope not initiated", tokens.index);
+        }
+        List<String> parameters = new ArrayList<>();
+        List<Ast.Stmt> statements = new LinkedList<>();
+        if(peek(Token.Type.IDENTIFIER)) {
+            parameters.add(tokens.get(0).getLiteral());
+            tokens.advance();
+            while(tokens.has(0) && !peek(")")) {
+                if(!match(",")) {
+                    throw new ParseException("Arguments not seperated by comma", tokens.index);
+                }
+                if(!tokens.has(0)) {
+                    throw new ParseException("unclosed argument scope", tokens.index);
+                }
+                if (peek(")")) {
+                    throw new ParseException("comma is not followed by arguments", tokens.index);
+                }
+                parameters.add(tokens.get(0).getLiteral());
+                tokens.advance();
+            }
+        }
+        if(!match(")")) {
+            throw new ParseException("unclosed parameter scope", tokens.index);
+        }
+        if(!match("DO")) {
+            throw new ParseException("Scope not initiated by DO", tokens.index);
+        }
+        while(tokens.has(0) && !peek("END")) {
+            statements.add(parseStatement());
+        }
+        if(!tokens.has(0)) {
+            throw new ParseException("Scope not Ended by END", tokens.index);
+        }
+        tokens.advance();
+        return new Ast.Method(name, parameters, statements);
     }
 
     /**
@@ -58,7 +132,37 @@ public final class Parser {
      * statement, then it is an expression/assignment statement.
      */
     public Ast.Stmt parseStatement() throws ParseException {
-        throw new UnsupportedOperationException(); //TODO
+        if (!tokens.has(0)) {
+            throw new ParseException("parsing out of bound", tokens.index);
+        }
+        if (match("LET")) {
+            return parseDeclarationStatement();
+        }
+        if (match("IF")) {
+            return parseIfStatement();
+        }
+        if (match("FOR")) {
+            return parseForStatement();
+        }
+        if (match("WHILE")) {
+            return parseWhileStatement();
+        }
+        if (match("RETURN")) {
+            return parseReturnStatement();
+        }
+        Ast.Expr expression = parseExpression();
+        if(match("=")) {
+            Ast.Expr value = parseExpression();
+            if(!match(";")) {
+                throw new ParseException("assignment not ended with ;", tokens.index);
+            }
+            return new Ast.Stmt.Assignment(expression,value);
+        }
+        if(!match(";")) {
+            throw new ParseException("expression not ended with ;", tokens.index);
+        }
+        return new Ast.Stmt.Expression(expression);
+
     }
 
     /**
@@ -67,7 +171,22 @@ public final class Parser {
      * statement, aka {@code LET}.
      */
     public Ast.Stmt.Declaration parseDeclarationStatement() throws ParseException {
-        throw new UnsupportedOperationException(); //TODO
+        if (!tokens.has(0)) {
+            throw new ParseException("parsing out of bound", tokens.index);
+        }
+        if (!peek(Token.Type.IDENTIFIER)) {
+            throw new ParseException("Declaration not started by Identifier", tokens.index);
+        }
+        String name = tokens.get(0).getLiteral();
+        tokens.advance();
+        if (!match("=")) {
+            return new Ast.Stmt.Declaration(name, Optional.empty());
+        }
+        Ast.Expr value = parseExpression();
+        if (!match(";")) {
+            throw new ParseException("statement not ended with ;", tokens.index);
+        }
+        return new Ast.Stmt.Declaration(name, Optional.of(value));
     }
 
     /**
@@ -76,7 +195,31 @@ public final class Parser {
      * {@code IF}.
      */
     public Ast.Stmt.If parseIfStatement() throws ParseException {
-        throw new UnsupportedOperationException(); //TODO
+        if (!tokens.has(0)) {
+            throw new ParseException("parsing out of bound", tokens.index);
+        }
+        Ast.Expr condition = parseExpression();
+        if (!match("DO")) {
+            throw new ParseException("Scope not initiated by DO", tokens.index);
+        }
+        List<Ast.Stmt> thenStatements = new LinkedList<>();
+        List<Ast.Stmt> elseStatements = new LinkedList<>();
+        while (!peek("ELSE") && !peek("END")) {
+            thenStatements.add( parseStatement());
+        }
+        if (!tokens.has(0)) {
+            throw new ParseException("Scope not ended", tokens.index);
+        }
+        if (match("ELSE")) {
+            while (tokens.has(0) && !peek("END")) {
+                elseStatements.add(parseStatement());
+            }
+        }
+        if (!tokens.has(0)) {
+            throw new ParseException("Scope not ended with END", tokens.index);
+        }
+        tokens.advance();
+        return new Ast.Stmt.If(condition, thenStatements, elseStatements);
     }
 
     /**
@@ -85,7 +228,31 @@ public final class Parser {
      * {@code FOR}.
      */
     public Ast.Stmt.For parseForStatement() throws ParseException {
-        throw new UnsupportedOperationException(); //TODO
+        if (!tokens.has(0)) {
+            throw new ParseException("parsing out of bound", tokens.index);
+        }
+        if (!peek(Token.Type.IDENTIFIER)) {
+            throw new ParseException("FOR not started by Identifier", tokens.index);
+        }
+        String name = tokens.get(0).getLiteral();
+        tokens.advance();
+        if (!match("IN")) {
+            throw new ParseException("Scope of condition bot initiated by IN", tokens.index);
+        }
+        Ast.Expr value = parseExpression();
+        if (!match("DO")) {
+            throw new ParseException("Scope not initiated by DO", tokens.index);
+        }
+        List<Ast.Stmt> statements = new LinkedList<>();
+        while (tokens.has(0) && !peek("END")) {
+            statements.add(parseStatement());
+        }
+        if (!tokens.has(0)) {
+            throw new ParseException("scope not ended by END", tokens.index);
+        }
+        tokens.advance();
+        return new Ast.Stmt.For(name, value, statements);
+
     }
 
     /**
@@ -94,8 +261,24 @@ public final class Parser {
      * {@code WHILE}.
      */
     public Ast.Stmt.While parseWhileStatement() throws ParseException {
-        throw new UnsupportedOperationException(); //TODO
+        if (!tokens.has(0)) {
+            throw new ParseException("parsing out of bound", tokens.index);
+        }
+        Ast.Expr condition = parseExpression();
+        if (!match("DO")) {
+            throw new ParseException("Scope not initiated with DO", tokens.index);
+        }
+        List<Ast.Stmt> statements = new LinkedList<>();
+        while (tokens.has(0) && !peek("END")) {
+            statements.add(parseStatement());
+        }
+        if (!tokens.has(0)) {
+            throw new ParseException("scope not ended by END", tokens.index);
+        }
+        tokens.advance();
+        return new Ast.Stmt.While(condition, statements);
     }
+
 
     /**
      * Parses a return statement from the {@code statement} rule. This method
@@ -103,68 +286,78 @@ public final class Parser {
      * {@code RETURN}.
      */
     public Ast.Stmt.Return parseReturnStatement() throws ParseException {
-        throw new UnsupportedOperationException(); //TODO
+        if (!tokens.has(0)) {
+            throw new ParseException("parsing out of bound", tokens.index);
+        }
+        Ast.Expr expression = parseExpression();
+        if(!match(";")){
+            throw new ParseException("Return statement not ended with ;", tokens.index);
+        }
+        return new Ast.Stmt.Return(expression);
     }
+
 
     /**
      * Parses the {@code expression} rule.
      */
     public Ast.Expr parseExpression() throws ParseException {
-        if(tokens.has(0)) {
-            return parseLogicalExpression();
+        if(!tokens.has(0)) {
+            throw new ParseException("parsing out of bound", tokens.index);
         }
-        throw new ParseException("parsing out of bound", tokens.index);
+        return parseLogicalExpression();
     }
 
     /**
      * Parses the {@code logical-expression} rule.
      */
     public Ast.Expr parseLogicalExpression() throws ParseException {
-        if(tokens.has(0)) {
-            Ast.Expr equalExp = parseEqualityExpression();
-            if(peek("OR") || peek("AND")) {
-                String operator = tokens.get(0).getLiteral();
-                tokens.advance();
-                Ast.Expr operandExp = parseAdditiveExpression();
-                return new Ast.Expr.Binary(operator, equalExp, operandExp);
-            }
-            return equalExp;
+        if(!tokens.has(0)) {
+            throw new ParseException("parsing out of bound", tokens.index);
         }
-        throw new ParseException("parsing out of bound", tokens.index);
+        Ast.Expr equalExp = parseEqualityExpression();
+        if(peek("OR") || peek("AND")) {
+            String operator = tokens.get(0).getLiteral();
+            tokens.advance();
+            Ast.Expr operandExp = parseAdditiveExpression();
+            return new Ast.Expr.Binary(operator, equalExp, operandExp);
+        }
+        return equalExp;
     }
+
 
     /**
      * Parses the {@code equality-expression} rule.
      */
     public Ast.Expr parseEqualityExpression() throws ParseException {
-        if(tokens.has(0)) {
-            Ast.Expr additiveExp = parseAdditiveExpression();
-            if(peek(Token.Type.OPERATOR)) {
-                String operator = tokens.get(0).getLiteral();
-                tokens.advance();
-                Ast.Expr operandExp = parseAdditiveExpression();
-                return new Ast.Expr.Binary(operator, additiveExp, operandExp);
-            }
-            return additiveExp;
+        if(!tokens.has(0)) {
+            throw new ParseException("parsing out of bound", tokens.index);
         }
-        throw new ParseException("parsing out of bound", tokens.index);
+        Ast.Expr additiveExp = parseAdditiveExpression();
+        if(peek(Token.Type.OPERATOR) && (peek("==") | peek("!=") | peek("<=") | peek(">="))) {
+            String operator = tokens.get(0).getLiteral();
+            tokens.advance();
+            Ast.Expr operandExp = parseAdditiveExpression();
+            return new Ast.Expr.Binary(operator, additiveExp, operandExp);
+        }
+        return additiveExp;
+
     }
 
     /**
      * Parses the {@code additive-expression} rule.
      */
     public Ast.Expr parseAdditiveExpression() throws ParseException {
-        if(tokens.has(0)) {
-            Ast.Expr multiExp = parseMultiplicativeExpression();
-            if(peek("+") || peek("-")) {
-                String operator = tokens.get(0).getLiteral();
-                tokens.advance();
-                Ast.Expr operandExp = parseMultiplicativeExpression();
-                return new Ast.Expr.Binary(operator,multiExp,operandExp);
-            }
-            return multiExp;
+        if(!tokens.has(0)) {
+            throw new ParseException("parsing out of bound", tokens.index);
         }
-        throw new ParseException("parsing out of bound", tokens.index);
+        Ast.Expr multiExp = parseMultiplicativeExpression();
+        if(peek("+") || peek("-")) {
+            String operator = tokens.get(0).getLiteral();
+            tokens.advance();
+            Ast.Expr operandExp = parseMultiplicativeExpression();
+            return new Ast.Expr.Binary(operator,multiExp,operandExp);
+        }
+        return multiExp;
     }
 
 
@@ -172,56 +365,60 @@ public final class Parser {
      * Parses the {@code multiplicative-expression} rule.
      */
     public Ast.Expr parseMultiplicativeExpression() throws ParseException {
-        if(tokens.has(0)) {
-            Ast.Expr secondaryExp = parseSecondaryExpression();
-            if(peek("*") || peek("/")) {
-                String operator = tokens.get(0).getLiteral();
-                tokens.advance();
-                Ast.Expr operandExp = parseSecondaryExpression();
-                return new Ast.Expr.Binary(operator,secondaryExp,operandExp);
-            }
-            return secondaryExp;
+        if(!tokens.has(0)) {
+            throw new ParseException("parsing out of bound", tokens.index);
         }
-        throw new ParseException("parsing out of bound", tokens.index);
+        Ast.Expr secondaryExp = parseSecondaryExpression();
+        if(peek("*") || peek("/")) {
+            String operator = tokens.get(0).getLiteral();
+            tokens.advance();
+            Ast.Expr operandExp = parseSecondaryExpression();
+            return new Ast.Expr.Binary(operator,secondaryExp,operandExp);
+            }
+        return secondaryExp;
     }
 
     /**
      * Parses the {@code secondary-expression} rule.
      */
     public Ast.Expr parseSecondaryExpression() throws ParseException {
-        if (tokens.has(0)) {
-            Ast.Expr primaryExp = parsePrimaryExpression();
-            if (match(".")) {
-                if (peek(Token.Type.IDENTIFIER)) {
-                    String name = tokens.get(0).getLiteral();
-                    tokens.advance();
-                    if (match("(")) {
-                        List<Ast.Expr> arguments = new LinkedList<>();
-                        if (!match(")")) {
-                            arguments.add(parseExpression());
-                            while (tokens.has(0) && !peek(")")) {
-                                if (!match(",")) {
-                                    throw new ParseException("arguments not seperated by comma", tokens.index);
-                                }
-                                if (peek(")")) {
-                                    throw new ParseException("comma is not followed by arguments", tokens.index);
-                                }
-                                arguments.add(parseExpression());
-                            }
-                        }
-                        if (!peek(")")) {
-                            throw new ParseException("unclosed function call", tokens.index);
-                        }
-                        return new Ast.Expr.Function(Optional.of(primaryExp), name, arguments);
-                    }
-                    return new Ast.Expr.Access(Optional.of(primaryExp), name);
-                } else {
-                    throw new ParseException("unspecified field access", tokens.index);
-                }
-            }
+        if (!tokens.has(0)) {
+            throw new ParseException("parsing out of bound", tokens.index);
+        }
+        Ast.Expr primaryExp = parsePrimaryExpression();
+        if (!match(".")) {
             return primaryExp;
         }
-        throw new ParseException("parsing out of bound", tokens.index);
+        if (!peek(Token.Type.IDENTIFIER)) {
+            throw new ParseException("unspecified field access", tokens.index);
+        }
+        String name = tokens.get(0).getLiteral();
+        tokens.advance();
+        if (!match("(")) {
+            return new Ast.Expr.Access(Optional.of(primaryExp), name);
+        }
+        List<Ast.Expr> arguments = new LinkedList<>();
+        if (!match(")")) {
+            arguments.add(parseExpression());
+            while (tokens.has(0) && !peek(")")) {
+                if (!match(",")) {
+                    throw new ParseException("arguments not seperated by comma", tokens.index);
+                }
+                if(!match(")")) {
+                    throw new ParseException("unclosed argument scope", tokens.index);
+                }
+                if (peek(")")) {
+                    throw new ParseException("comma is not followed by arguments", tokens.index);
+                }
+                arguments.add(parseExpression());
+            }
+            if (!tokens.has(0)) {
+                throw new ParseException("unclosed function call", tokens.index);
+            }
+            tokens.advance();
+        }
+
+        return new Ast.Expr.Function(Optional.of(primaryExp), name, arguments);
     }
 
     /**
@@ -235,10 +432,12 @@ public final class Parser {
             String tokenLiteral = tokens.get(0).getLiteral();
             if (
                     match("TRUE") |
-                    match("FALSE") |
-                    match("NIL")
+                    match("FALSE")
             ) {
                 return new Ast.Expr.Literal(new Boolean(tokenLiteral));
+            }
+            if(match("NIL")) {
+                return null;
             }
             if (match(Token.Type.INTEGER)) {
                 return new Ast.Expr.Literal(new BigInteger(tokenLiteral));
@@ -252,12 +451,15 @@ public final class Parser {
             }
             if (match(Token.Type.STRING)) {
                 tokenLiteral = tokenLiteral.replaceAll("\"","");
-                tokenLiteral = tokenLiteral.replaceAll("[\b\n\r\t]", " ");
+                tokenLiteral = tokenLiteral.replaceAll("\\\\b", "\b");
+                tokenLiteral = tokenLiteral.replaceAll("\\\\n", "\n");
+                tokenLiteral = tokenLiteral.replaceAll("\\\\r", "\r");
+                tokenLiteral = tokenLiteral.replaceAll("\\\\t", "\t");
                 return new Ast.Expr.Literal(tokenLiteral);
             }
             if (peek(Token.Type.IDENTIFIER)) {
                 String name = tokenLiteral;
-                if (match(Token.Type.IDENTIFIER, '(')) {
+                if (match(Token.Type.IDENTIFIER, "(")) {
                     List<Ast.Expr> arguments = new LinkedList<>();
                     if(!match(")")) {
                         arguments.add(parseExpression());
@@ -265,13 +467,16 @@ public final class Parser {
                             if(!match(",")){
                                 throw new ParseException("arguments not seperated by comma", tokens.index);
                             }
+                            if(!tokens.has(0)) {
+                                throw new ParseException("unclosed argument scope", tokens.index);
+                            }
                             if(peek(")")){
                                 throw new ParseException("comma is not followed by arguments", tokens.index);
                             }
                             arguments.add(parseExpression());
                         }
-                        if(!peek(")")) {
-                            throw new ParseException("unclosed function call", tokens.index);
+                        if(!tokens.has(0)) {
+                            throw new ParseException("not closed function call", tokens.index);
                         }
                         tokens.advance();
                     }
@@ -290,7 +495,10 @@ public final class Parser {
             }
 
         }
-        throw new ParseException("parsing out of bound", tokens.index);
+        if(tokens.has(0)) {
+            throw new ParseException(tokens.get(0).getLiteral() + "not matching type for Prime expr", tokens.index);
+        }
+        throw new ParseException("parsing out of bound ", tokens.index);
     }
 
 

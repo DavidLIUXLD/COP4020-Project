@@ -1,2 +1,4 @@
+plc/project/ParserTests.java
+ plc.project.ParserTests
 plc/homework/LexerTests.java
  plc.homework.LexerTests
