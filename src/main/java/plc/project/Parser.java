@@ -1,12 +1,7 @@
 package plc.project;
 
-import plc.homework.Token;
-import plc.homework.ParseException;
-import sun.awt.image.ImageWatched;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -374,7 +369,7 @@ public final class Parser {
             tokens.advance();
             Ast.Expr operandExp = parseSecondaryExpression();
             return new Ast.Expr.Binary(operator,secondaryExp,operandExp);
-            }
+        }
         return secondaryExp;
     }
 
@@ -432,7 +427,7 @@ public final class Parser {
             String tokenLiteral = tokens.get(0).getLiteral();
             if (
                     match("TRUE") |
-                    match("FALSE")
+                            match("FALSE")
             ) {
                 return new Ast.Expr.Literal(new Boolean(tokenLiteral));
             }

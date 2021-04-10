@@ -1,4 +1,4 @@
-package plc.homework;
+package plc.project;
 
 public final class Token {
 

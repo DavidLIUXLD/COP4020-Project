@@ -1,6 +1,4 @@
 package plc.project;
-import plc.homework.ParseException;
-import plc.homework.Token;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

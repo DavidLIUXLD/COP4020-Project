@@ -1,2 +1,25 @@
-Ast.Expr.Literal{literal=1}
-7Ast.Expr.Access{receiver=Optional.empty, name='expr'}
+true
+2147483647
+9223372036854775807
+1
+string
+1
+1
+true
+1
+FALSE
+true
+9223372036854775807
+true
+true
+false
+true
+FALSE
+Ben
+10
+1
+10
+1
+1
+Hello, World!
+1
