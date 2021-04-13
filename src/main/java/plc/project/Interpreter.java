@@ -358,7 +358,9 @@ public class Interpreter implements Ast.Visitor<Environment.PlcObject> {
         }
         throw new RuntimeException("left expected integer or decimal but get " + leftObj.getClass().toString() + ".");
     }
- 
+    /**
+     * Helper function to ensure an object is of the appropriate type.
+     */
     private static <T> T requireType(Class<T> type, Environment.PlcObject object) {
         if(type.isInstance(object.getValue())) {
             return type.cast(object.getValue());
@@ -367,7 +369,9 @@ public class Interpreter implements Ast.Visitor<Environment.PlcObject> {
         }
     }
 
- 
+    /**
+     * Exception class for returning values.
+     */
     private static class Return extends RuntimeException {
 
         private final Environment.PlcObject value;
@@ -375,7 +379,5 @@ public class Interpreter implements Ast.Visitor<Environment.PlcObject> {
         private Return(Environment.PlcObject value) {
             this.value = value;
         }
-
     }
-
 }
