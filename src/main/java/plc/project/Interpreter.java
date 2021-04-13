@@ -278,7 +278,7 @@ public class Interpreter implements Ast.Visitor<Environment.PlcObject> {
     }
 
     private Environment.PlcObject visitEqual(Environment.PlcObject leftObj,
-                                                Environment.PlcObject rightObj, String operator) {
+                                             Environment.PlcObject rightObj, String operator) {
         boolean product = leftObj.equals(rightObj);
         if(operator == "==") {
             return Environment.create(product);
@@ -340,7 +340,7 @@ public class Interpreter implements Ast.Visitor<Environment.PlcObject> {
     }
 
     private Environment.PlcObject visitDivide(Environment.PlcObject leftObj,
-                                             Environment.PlcObject rightObj) {
+                                              Environment.PlcObject rightObj) {
         if(BigInteger.class.isInstance(leftObj)) {
             int left = requireType(BigInteger.class, leftObj).intValue();
             int right = requireType(BigInteger.class, rightObj).intValue();
@@ -358,9 +358,7 @@ public class Interpreter implements Ast.Visitor<Environment.PlcObject> {
         }
         throw new RuntimeException("left expected integer or decimal but get " + leftObj.getClass().toString() + ".");
     }
-    /**
-     * Helper function to ensure an object is of the appropriate type.
-     */
+ 
     private static <T> T requireType(Class<T> type, Environment.PlcObject object) {
         if(type.isInstance(object.getValue())) {
             return type.cast(object.getValue());
@@ -369,9 +367,7 @@ public class Interpreter implements Ast.Visitor<Environment.PlcObject> {
         }
     }
 
-    /**
-     * Exception class for returning values.
-     */
+ 
     private static class Return extends RuntimeException {
 
         private final Environment.PlcObject value;
